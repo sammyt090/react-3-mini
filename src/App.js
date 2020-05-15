@@ -27,17 +27,29 @@ class App extends Component {
     this.byYear = this.byYear.bind(this);
     this.deleteBuyer = this.deleteBuyer.bind(this);
   }
-
-  getVehicles() {
+  async getVehicles() {
     // axios (GET)
     // setState with response -> vehiclesToDisplay
-    axios.get('https://joes-autos.herokuapp.com/api/vehicles')
-    .then(response => {
-      toast.success('Got all vehicles')
-      this.setState({vehiclesToDisplay: response.data})
+    const response = await axios.get('https:joes-autos.herokuapp.com/api/vehicles').catch(
+      err => toast.error("Failed to get vehicles")
+    )
+    this.setState({
+      vehiclesToDisplay: response.data
     })
-    .catch(() => toast.error('Failed to get vehicles'))
   }
+
+  // getVehicles() {
+  //   // axios (GET)
+  //   // setState with response -> vehiclesToDisplay
+  //   axios.get('https://joes-autos.herokuapp.com/api/vehicles')
+  //   .then( response => {
+  //     this.setState({
+  //       vehiclesToDisplay: response.data
+  //     })
+  //     toast.success("Yo, dawg! I got your vehicles to to display")
+
+  //   }).catch(err => console.log(err))
+  // }
 
   getPotentialBuyers() {
     // axios (GET)
@@ -47,12 +59,14 @@ class App extends Component {
   sellCar(id) {
     // axios (DELETE)
     // setState with response -> vehiclesToDisplay
-    axios.delete(`https://joes-autos.herokuapp.com/api/vehicles/${id}`)
-    .then(response => {
-      toast.success('Sold car')
-      this.setState({vehiclesToDisplay: response.data.vehicles})
-    })
-    .catch(() => toast.error('Failed to sell car'))
+    axios.delete(`https://joes-autos.herokuapp.com/api/vehicles/${id}`).then(
+      res => {
+        this.setState({
+          vehiclesToDisplay: res.data.vehicles
+        })
+        toast.success("Sold")
+      }
+    ) .catch( err =>toast.error("Failed to sell car"))
   }
 
   filterByMake() {
@@ -72,12 +86,14 @@ class App extends Component {
   updatePrice(priceChange, id) {
     // axios (PUT)
     // setState with response -> vehiclesToDisplay
-    axios.put(`https://joes-autos.herokuapp.com/api/vehicles/${id}/${priceChange}`)
-    .then(response => {
-      toast.success('Updated Price')
-      this.setState({vehiclesToDisplay: response.data.vehicles})
-    })
-    .catch(() => toast.error('Failed to update price'))
+    axios.put(`https://joes-autos.herokuapp.com/api/vehicles/${id}/${priceChange}`).then(
+      response => {
+        this.setState({
+          vehiclesToDisplay: response.data.vehicles
+        })
+        toast.success("Successfully updated the price")
+      }
+    ).catch( err => toast.error('Failed to update price'))
   }
 
   addCar() {
@@ -91,14 +107,16 @@ class App extends Component {
 
     // axios (POST)
     // setState with response -> vehiclesToDisplay
-    axios.post('https://joes-autos.herokuapp.com/api/vehicles', newCar)
-    .then(response => {
-      toast.success('Added car')
-      this.setState({vehiclesToDisplay: response.data.vehicles})
-    })
-    .catch(() => toast.error('Failed to add car'))
+    axios.post('https://joes-autos.herokuapp.com/api/vehicles', newCar).then(
+      res =>{
+        this.setState({
+          vehiclesToDisplay: res.data.vehicles
+        })
+        toast.success("You did it! You did it! You did it! Yay!")
+      }
+    ).catch(er=> toast.error('Swiper swiped your car'))
+   
   }
-
   addBuyer() {
     let newBuyer = {
       name: this.name.value,
